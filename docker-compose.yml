@@ -1,0 +1,76 @@
+version: '3'
+services:
+  rabbit:
+    image: rabbitmq:3-management
+
+  prometheus:
+    build:
+      context: ./prometheus
+
+  monitoring:
+    build:
+      context: ./monitoring
+    restart: on-failure
+
+  coordinator:
+    build:
+      context: ./coordinator
+    restart: on-failure
+
+  boiler-temp:
+    build:
+      context: ./sensors
+    environment:
+      NAME: "boiler-temp"
+      FREQ: "5"
+      MAX: "450.0"
+      MIN: "250.0"
+      STEP: "9.0"
+    restart: on-failure
+
+  boiler-pressure:
+    build:
+      context: ./sensors
+    environment:
+      NAME: "boiler-pressure"
+      FREQ: "5"
+      MAX: "15"
+      MIN: "3"
+      STEP: "0.3"
+    restart: on-failure
+
+  boiler-current:
+    build:
+      context: ./sensors
+    environment:
+      NAME: "boiler-current"
+      FREQ: "5"
+      MAX: "50.0"
+      MIN: "20.0"
+      STEP: "1.0"
+    restart: on-failure
+
+  boiler-mixer:
+    build:
+      context: ./sensors
+    environment:
+      NAME: "boiler-mixer"
+      FREQ: "5"
+      MAX: "150.0"
+      MIN: "90.0"
+      STEP: "3.0"
+    restart: on-failure
+
+  rabbit-exporter:
+    image: kbudde/rabbitmq-exporter
+    network_mode: "service:rabbit"
+    restart: on-failure
+
+  grafana:
+    image: eugenebad/dist-grafana:v1
+    ports:
+      - "3000:3000"
+    restart: on-failure
+
+  node-exporter:
+    image: prom/node-exporter:latest

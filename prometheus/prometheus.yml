@@ -1,0 +1,46 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 30s
+  external_labels:
+    monitor: "dist-go"
+
+scrape_configs:
+  - job_name: rabbit
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['rabbit:9090']
+
+  - job_name: boiler-temp
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['boiler-temp:2112']
+
+  - job_name: boiler-pressure
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['boiler-pressure:2112']
+
+  - job_name: boiler-current
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['boiler-current:2112']
+
+  - job_name: boiler-mixer
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['boiler-mixer:2112']
+
+  - job_name: coordinator
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['coordinator:2112']
+
+  - job_name: monitoring
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['monitoring:2112']
+
+  - job_name: runtime-metrics
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['node-exporter:9100', 'host.docker.internal:50501']
